@@ -1,56 +1,116 @@
 
 #include <vector>
 #include <string.h>
+#include <iostream>
+#include <string>
 #define ADD 1
 #define PRINT 2
 #define DELETE 3
 #define EXIT 4
 
 using namespace std;
-parseCommand(char*input);
-addEntry(vector<Student*> *list);
 struct Student {
 	char first[80];
 	char last[80];
 	int id;
 	float gpa;
-}
+};
+char* getInput();
+int parseCommand(char*input);
+void addEntry(vector<Student*> *list);
+int deleteEntry(vector<Student*> *list);
+void printAll(vector<Student*> *list);
+
 int main() {
+	char *input;
 	vector<Student*> *list = new vector<Student*>(80);
 	bool continueoperations = true;
 	while(continueoperations == true) {
-		switch(parseCommand(char *input) {
+		cout << "ADD, DELETE, PRINT or EXIT\n";
+		input = getInput();
+		switch(parseCommand(input)) {
 			case ADD:
+				addEntry(list);
+				break;
+			case DELETE:
+			//if it returns 1, there is such an entry;
+
+				if(deleteEntry(list) == 0) {
+		        		cout <<	"The id does not exist in the system";
+					break;
+				} else {
+					cout << "Deleted student. \n";
+				}
+				break;
+			case PRINT:
+				printAll(list);
+				break;
+			case EXIT:
+				continueoperations == false;
+				break;
+			case 0:
+				cout << "You didn't enter a valid command.";
+				break;
 				
 		}	
 	}
 	
-	
 return 0;
 
+}
+
+char* getInput() {
+	char *input = new char[6];
+	bool valid = false;
+
+	while(valid == false) {
+		cin.getline(input, 5);
+		valid = true;
+	       if(cin.fail()) {
+			cin.clear();
+			cin.ignore(1000, '\n');
+			cout << "Please enter in nontroll input.";
+			valid = false;			
+
+	       }	       
+	}
+
+	return input;
+}
+
+void printAll(vector<Student*> *list) {
+	for(int i = 0; i < list->size(); i++) {
+		cout << list->at(i)->first << " " << list->at(i)->last << ", " << list->at(i)->id
+			<< ", " << list->at(i)->gpa;
+	}
 }
 
 int parseCommand(char *input) {
 	if(!strcmp(input, "ADD")) {
 		return ADD;
 	}
-	if(!strcmp(input, "PRINT")) {
+	else if(!strcmp(input, "PRINT")) {
 		return PRINT;
 	}
-	if(!strcmp(input, "DELETE")) {
+	else if(!strcmp(input, "DELETE")) {
 		return DELETE;
 	}	
-	if(!strcmp(input, "EXIT")) {
+	else if(!strcmp(input, "EXIT")) {
 		return EXIT;
+	}
+	else {
+		return 0;
 	}
 }
 
 void addEntry(vector<Student*> *list) {
 	bool valid;
-	cin.push_back(new Student());
+	cin.clear();
+	cin.ignore(1000, '\n');
+	list->push_back(new Student);
 	cout << "Enter first name: ";
 	while(!valid) {
-		cin >> list[list.size() - 1].first;
+		cin >> list->at(list->size() - 1)->first;
 		if(!cin.fail()) {
 			valid = true;
 		} else {
@@ -60,12 +120,12 @@ void addEntry(vector<Student*> *list) {
 		}
 
 	}
-	
-
+		cin.clear();
+	cin.ignore(1000, '\n');
 	//deals with last name
 	cout << "Enter last name: ";
 	while(!valid) {
-		cin >> list[list.size() - 1].last;
+		cin >> list->at(list->size() - 1)->last;
 		if(!cin.fail()) {
 			valid = true;
 		} else {
@@ -74,11 +134,12 @@ void addEntry(vector<Student*> *list) {
 			cin.ignore(1000, '\n');
 		}
 
-	}
+	}	cin.clear();
+	cin.ignore(1000, '\n');
 	//deals with id
 	cout << "Enter ID number: ";
 	while(!valid) {
-		cin >> list[list.size() - 1].id;
+		cin >> list->at(list->size() - 1)->id;
 		if(!cin.fail()) {
 			valid = true;
 		} else {
@@ -87,10 +148,11 @@ void addEntry(vector<Student*> *list) {
 			cin.ignore(1000, '\n');
 		}
 	}
-	//deals with gpa
+	cin.clear();
+	cin.ignore(1000, '\n');//deals with gpa
 	cout << "Enter GPA: ";
 	while(!valid) {
-		cin >> list[list.size() - 1].gpa;
+		cin >> list->at(list->size() - 1)->gpa;
 		if(!cin.fail()) {
 			valid = true;
 		} else {
@@ -100,8 +162,9 @@ void addEntry(vector<Student*> *list) {
 		}
 	}	
 }
+//returns 1 if it worked
 //deletes an entry
-void deleteEntry(vector<Student*> *list) {
+int deleteEntry(vector<Student*> *list) {
 	bool valid;
 	int id;
 	cout << "Enter the id of the student you want to delete: ";
@@ -116,11 +179,13 @@ void deleteEntry(vector<Student*> *list) {
 		}
 	}
 	
-	for(int i = 0; i < list.size(); i++) {
-		if(list[i].id == id) {
-			list.erase(id);
-
+	for(int i = 0; i < list->size(); i++) {
+		if(list->at(i)->id == id) {
+			list->erase(list->begin() +i);
+			return 1;
 		}
 	}
+	return 0;
+
 
 }
