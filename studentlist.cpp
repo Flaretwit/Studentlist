@@ -23,10 +23,10 @@ void printAll(vector<Student*> *list);
 
 int main() {
 	char *input;
-	vector<Student*> *list = new vector<Student*>(80);
+	vector<Student*> *list = new vector<Student*>();
 	bool continueoperations = true;
 	while(continueoperations == true) {
-		cout << "ADD, DELETE, PRINT or EXIT\n";
+		cout << "Do you want to: ADD, DELETE, PRINT or EXIT?\n";
 		input = getInput();
 		switch(parseCommand(input)) {
 			case ADD:
@@ -34,25 +34,24 @@ int main() {
 				break;
 			case DELETE:
 			//if it returns 1, there is such an entry;
-
 				if(deleteEntry(list) == 0) {
-		        		cout <<	"The id does not exist in the system";
+		        		cout <<	"The id does not exist in the system.";
 					break;
 				} else {
-					cout << "Deleted student. \n";
+					cout << "Deleted student. \n" << endl;
 				}
 				break;
 			case PRINT:
 				printAll(list);
 				break;
 			case EXIT:
-				continueoperations == false;
+				continueoperations = false;
 				break;
 			case 0:
 				cout << "You didn't enter a valid command.";
 				break;
-				
-		}	
+		}
+			
 	}
 	
 return 0;
@@ -60,28 +59,25 @@ return 0;
 }
 
 char* getInput() {
-	char *input = new char[6];
+	char *input = new char[80];
 	bool valid = false;
-
 	while(valid == false) {
-		cin.getline(input, 5);
+		cin.getline(input, 80);	
 		valid = true;
 	       if(cin.fail()) {
 			cin.clear();
 			cin.ignore(1000, '\n');
 			cout << "Please enter in nontroll input.";
 			valid = false;			
-
 	       }	       
 	}
-
 	return input;
 }
 
-void printAll(vector<Student*> *list) {
+void printAll(vector<Student*> *list) { 
 	for(int i = 0; i < list->size(); i++) {
 		cout << list->at(i)->first << " " << list->at(i)->last << ", " << list->at(i)->id
-			<< ", " << list->at(i)->gpa;
+			<< ", " << list->at(i)->gpa << endl;
 	}
 }
 
@@ -105,27 +101,10 @@ int parseCommand(char *input) {
 
 void addEntry(vector<Student*> *list) {
 	bool valid;
-	cin.clear();
-	cin.ignore(1000, '\n');
-	list->push_back(new Student);
+	Student *student = new Student();
 	cout << "Enter first name: ";
 	while(!valid) {
-		cin >> list->at(list->size() - 1)->first;
-		if(!cin.fail()) {
-			valid = true;
-		} else {
-			cout << "Invalid input";
-			cin.clear();
-			cin.ignore(1000, '\n');
-		}
-
-	}
-		cin.clear();
-	cin.ignore(1000, '\n');
-	//deals with last name
-	cout << "Enter last name: ";
-	while(!valid) {
-		cin >> list->at(list->size() - 1)->last;
+		cin >> student->first;
 		if(!cin.fail()) {
 			valid = true;
 		} else {
@@ -134,25 +113,46 @@ void addEntry(vector<Student*> *list) {
 			cin.ignore(1000, '\n');
 		}
 
-	}	cin.clear();
+	}
+	cin.clear();
 	cin.ignore(1000, '\n');
+	valid = false;
+
+	//deals with last name
+	cout << "Enter last name: ";
+	while(!valid) {
+		cin >> student->last;
+		if(!cin.fail()) {
+			valid = true;
+		} else {
+			cout << "Invalid input. Enter a string.";
+			cin.clear();
+			cin.ignore(1000, '\n');
+		}
+
+	}	
+	cin.clear();
+	cin.ignore(1000, '\n');
+	valid = false;
+	
 	//deals with id
 	cout << "Enter ID number: ";
 	while(!valid) {
-		cin >> list->at(list->size() - 1)->id;
+		cin >> student->id;
 		if(!cin.fail()) {
-			valid = true;
+				valid = true;
 		} else {
 			cout << "Invalid input. Enter an integer.";
 			cin.clear();
 			cin.ignore(1000, '\n');
 		}
 	}
-	cin.clear();
-	cin.ignore(1000, '\n');//deals with gpa
+	
+	//deals with gpa
+	valid = false;
 	cout << "Enter GPA: ";
 	while(!valid) {
-		cin >> list->at(list->size() - 1)->gpa;
+		cin >> student->gpa;
 		if(!cin.fail()) {
 			valid = true;
 		} else {
@@ -160,7 +160,11 @@ void addEntry(vector<Student*> *list) {
 			cin.clear();
 			cin.ignore(1000, '\n');
 		}
-	}	
+	
+	}
+	list->push_back(student);
+	cout << "Student added. \n";
+	cin.ignore(1000, '\n');	
 }
 //returns 1 if it worked
 //deletes an entry
@@ -186,6 +190,4 @@ int deleteEntry(vector<Student*> *list) {
 		}
 	}
 	return 0;
-
-
 }
