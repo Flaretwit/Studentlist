@@ -18,7 +18,7 @@ struct Student {
 char* getInput();
 int parseCommand(char*input);
 void addEntry(vector<Student*> *list);
-int deleteEntry(vector<Student*> *list);
+void deleteEntry(vector<Student*> *list);
 void printAll(vector<Student*> *list);
 
 int main() {
@@ -26,20 +26,17 @@ int main() {
 	vector<Student*> *list = new vector<Student*>();
 	bool continueoperations = true;
 	while(continueoperations == true) {
-		cout << "Do you want to: ADD, DELETE, PRINT or EXIT?\n";
+		cin.clear();
+		cout << "Do you want to: ADD, DELETE, PRINT or EXIT?" << endl;
 		input = getInput();
+		cout << "Input: " << input << "end" << endl;
 		switch(parseCommand(input)) {
 			case ADD:
 				addEntry(list);
 				break;
 			case DELETE:
 			//if it returns 1, there is such an entry;
-				if(deleteEntry(list) == 0) {
-		        		cout <<	"The id does not exist in the system.";
-					break;
-				} else {
-					cout << "Deleted student. \n" << endl;
-				}
+				deleteEntry(list);
 				break;
 			case PRINT:
 				printAll(list);
@@ -70,10 +67,9 @@ char* getInput() {
 			cout << "Please enter in nontroll input.";
 			valid = false;			
 	       }	       
-	}
 	return input;
 }
-
+}
 void printAll(vector<Student*> *list) { 
 	for(int i = 0; i < list->size(); i++) {
 		cout << list->at(i)->first << " " << list->at(i)->last << ", " << list->at(i)->id
@@ -102,20 +98,19 @@ int parseCommand(char *input) {
 void addEntry(vector<Student*> *list) {
 	bool valid;
 	Student *student = new Student();
-	cout << "Enter first name: ";
 	while(!valid) {
+		cout << "Enter first name: ";
 		cin >> student->first;
 		if(!cin.fail()) {
 			valid = true;
 		} else {
-			cout << "Invalid input. Enter a string.";
+			cout << "Invalid input. Enter a string." << endl;
 			cin.clear();
 			cin.ignore(1000, '\n');
 		}
 
 	}
 	cin.clear();
-	cin.ignore(1000, '\n');
 	valid = false;
 
 	//deals with last name
@@ -125,14 +120,13 @@ void addEntry(vector<Student*> *list) {
 		if(!cin.fail()) {
 			valid = true;
 		} else {
-			cout << "Invalid input. Enter a string.";
+			cout << "Invalid input. Enter a string." << endl;
 			cin.clear();
 			cin.ignore(1000, '\n');
 		}
 
 	}	
 	cin.clear();
-	cin.ignore(1000, '\n');
 	valid = false;
 	
 	//deals with id
@@ -142,12 +136,12 @@ void addEntry(vector<Student*> *list) {
 		if(!cin.fail()) {
 				valid = true;
 		} else {
-			cout << "Invalid input. Enter an integer.";
+			cout << "Invalid input. Enter an integer." << endl;
 			cin.clear();
 			cin.ignore(1000, '\n');
 		}
 	}
-	
+	cin.clear();	
 	//deals with gpa
 	valid = false;
 	cout << "Enter GPA: ";
@@ -156,22 +150,25 @@ void addEntry(vector<Student*> *list) {
 		if(!cin.fail()) {
 			valid = true;
 		} else {
-			cout << "Invalid input. Enter a decimal.";
+			cout << "Invalid input. Enter a decimal." << endl;
 			cin.clear();
 			cin.ignore(1000, '\n');
 		}
 	
 	}
+	cin.ignore();
 	list->push_back(student);
-	cout << "Student added. \n";
-	cin.ignore(1000, '\n');	
+	cout << "Student added." << endl;
 }
-//returns 1 if it worked
-//deletes an entry
-int deleteEntry(vector<Student*> *list) {
+
+//deletes an entry by ID of student
+//returns if successful, if not, outputs that it failed
+void deleteEntry(vector<Student*> *list) {
 	bool valid;
 	int id;
-	cout << "Enter the id of the student you want to delete: ";
+	cin.ignore(1000, '\n');
+	cin.clear();
+	cout << "Enter the id of the student you want to delete: " << endl;
 	while(!valid) {
 		cin >> id;
 		if(!cin.fail()) {
@@ -186,8 +183,10 @@ int deleteEntry(vector<Student*> *list) {
 	for(int i = 0; i < list->size(); i++) {
 		if(list->at(i)->id == id) {
 			list->erase(list->begin() +i);
-			return 1;
+			cout << "Deleted student" << endl;
+			return;
 		}
 	}
-	return 0;
+	cout << "Student was not found in database" << endl;
+	
 }
